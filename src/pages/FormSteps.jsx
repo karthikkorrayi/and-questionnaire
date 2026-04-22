@@ -1,5 +1,5 @@
 import {
-  CheckGroup, RadioGroup, Field, FieldRow,
+  CheckGroup, RadioGroup, YesNo, Field, FieldRow,
   Card, SubLabel, Divider,
 } from '../components/FormControls'
 
@@ -8,18 +8,19 @@ export function Step0({ form, set }) {
   return (
     <>
       <div style={{
-        background: '#EDE5D8',
-        borderLeft: '3px solid #B5924C',
-        padding: '12px 18px',
+        background: 'var(--amber-pale)',
+        borderLeft: '2px solid var(--amber)',
+        padding: '14px 18px',
         marginBottom: '24px',
-        borderRadius: '2px',
-        fontSize: '13px',
-        color: '#8A7070',
+        borderRadius: '0 3px 3px 0',
+        fontSize: '12px',
+        fontWeight: 300,
+        color: 'var(--brown-light)',
         lineHeight: 1.7,
+        letterSpacing: '0.01em',
       }}>
-        <strong style={{ color: '#3D1A1A', fontWeight: 600 }}>Statement of Confidentiality: </strong>
-        This questionnaire contains confidential information of AnD Design Studio.
-        All responses are used exclusively for your project.
+        <strong style={{ color: 'var(--brown-mid)', fontWeight: 500 }}>Confidential: </strong>
+        All responses are used exclusively for your project scope.
       </div>
 
       <Card label="Personal Information">
@@ -305,19 +306,17 @@ export function Step5({ form, set }) {
       </Card>
 
       <Card label="Home Automation & Smart Features">
-        {[
-          { label: 'Smart lighting (Alexa / Google Home compatible switches)', name: 'smartLighting' },
-          { label: 'Smart curtains / motorized blinds', name: 'smartCurtains' },
-          { label: 'Smart door lock / video doorbell', name: 'smartDoorLock' },
-          { label: 'Smart AC / thermostat control', name: 'smartAC' },
-          { label: 'Whole home automation hub', name: 'homeHub' },
-        ].map(({ label, name }) => (
-          <div key={name} style={{ marginBottom: 20 }}>
-            <SubLabel>{label}</SubLabel>
-            <RadioGroup name={name} value={form[name]} onChange={set} options={['Yes', 'No']} />
-          </div>
-        ))}
-        <Field label="Brand / system preferences (Schneider, Wipro, Legrand, Alexa...)"
+        <YesNo name="smartLighting"  value={form.smartLighting}  onChange={set} label="Smart lighting (voice / app controlled)" />
+        <Divider />
+        <YesNo name="smartCurtains"  value={form.smartCurtains}  onChange={set} label="Smart curtains / motorized blinds" />
+        <Divider />
+        <YesNo name="smartDoorLock"  value={form.smartDoorLock}  onChange={set} label="Smart door lock / video doorbell" />
+        <Divider />
+        <YesNo name="smartAC"        value={form.smartAC}        onChange={set} label="Smart AC / thermostat control" />
+        <Divider />
+        <YesNo name="homeHub"        value={form.homeHub}        onChange={set} label="Whole home automation hub" />
+        <Divider />
+        <Field label="Brand / system preferences"
           name="brandPref" value={form.brandPref} onChange={set}
           placeholder="e.g. Legrand, Google Home, Schneider" />
       </Card>
@@ -342,18 +341,15 @@ export function Step6({ form, set }) {
       </Card>
 
       <Card label="Lifestyle & Functional Priorities">
-        {[
-          { label: 'Easy maintenance — anti-scratch, easy-clean surfaces preferred', name: 'easyMaintenance' },
-          { label: 'Storage is top priority — maximize concealed storage everywhere', name: 'storageFirst' },
-          { label: 'Vastu compliance is important — design guided by Vastu Shastra', name: 'vastu' },
-          { label: 'Energy efficiency / sustainable materials — eco-friendly, low VOC', name: 'ecoFriendly' },
-          { label: 'Senior / elderly friendly — anti-slip, grab bars, accessible layouts', name: 'elderlyFriendly' },
-        ].map(({ label, name }) => (
-          <div key={name} style={{ marginBottom: 20 }}>
-            <SubLabel>{label}</SubLabel>
-            <RadioGroup name={name} value={form[name]} onChange={set} options={['Yes', 'No']} />
-          </div>
-        ))}
+        <YesNo name="easyMaintenance" value={form.easyMaintenance} onChange={set} label="Easy maintenance — anti-scratch, easy-clean surfaces preferred" />
+        <Divider />
+        <YesNo name="storageFirst"    value={form.storageFirst}    onChange={set} label="Storage is top priority — maximize concealed storage" />
+        <Divider />
+        <YesNo name="vastu"           value={form.vastu}           onChange={set} label="Vastu compliance is important" />
+        <Divider />
+        <YesNo name="ecoFriendly"     value={form.ecoFriendly}     onChange={set} label="Energy efficiency / sustainable materials" />
+        <Divider />
+        <YesNo name="elderlyFriendly" value={form.elderlyFriendly} onChange={set} label="Senior / elderly friendly design needed" />
       </Card>
     </>
   )

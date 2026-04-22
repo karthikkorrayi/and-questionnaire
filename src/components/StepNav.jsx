@@ -5,41 +5,40 @@ export default function StepNav({ currentStep, onStepClick }) {
   const progress = ((currentStep + 1) / STEPS.length) * 100
 
   return (
-    <>
-      {/* Progress bar */}
-      <div className={styles.progressWrap}>
-        <div className={styles.progressTrack}>
-          <div
-            className={styles.progressFill}
-            style={{ width: `${progress}%` }}
-            role="progressbar"
-            aria-valuenow={currentStep + 1}
-            aria-valuemin={1}
-            aria-valuemax={STEPS.length}
-          />
-        </div>
-        <span className={styles.progressLabel}>
-          {currentStep + 1} / {STEPS.length}
-        </span>
+    <div className={styles.wrap}>
+      {/* Thin amber progress line */}
+      <div className={styles.progressTrack}>
+        <div
+          className={styles.progressFill}
+          style={{ width: `${progress}%` }}
+          role="progressbar"
+          aria-valuenow={currentStep + 1}
+          aria-valuemin={1}
+          aria-valuemax={STEPS.length}
+        />
       </div>
 
-      {/* Step tabs */}
-      <nav className={styles.stepsNav} aria-label="Form steps">
-        {STEPS.map((step, i) => (
-          <button
-            key={i}
-            className={`${styles.stepTab}
-              ${i === currentStep ? styles.active : ''}
-              ${i < currentStep ? styles.done : ''}
-              ${i > currentStep ? styles.upcoming : ''}`}
-            onClick={() => onStepClick(i)}
-            aria-current={i === currentStep ? 'step' : undefined}
-          >
-            {i < currentStep && <span className={styles.checkMark}>✓ </span>}
-            {step}
-          </button>
-        ))}
-      </nav>
-    </>
+      {/* Step counter + dot nav */}
+      <div className={styles.stepRow}>
+        <span className={styles.stepCounter}>
+          {currentStep + 1} <span className={styles.stepOf}>/ {STEPS.length}</span>
+        </span>
+
+        <div className={styles.dots} aria-label="Form progress">
+          {STEPS.map((_, i) => (
+            <button
+              key={i}
+              className={`${styles.dot}
+                ${i === currentStep ? styles.dotActive : ''}
+                ${i < currentStep ? styles.dotDone : ''}`}
+              onClick={() => onStepClick(i)}
+              aria-label={`Step ${i + 1}: ${STEPS[i]}`}
+            />
+          ))}
+        </div>
+
+        <span className={styles.stepName}>{STEPS[currentStep]}</span>
+      </div>
+    </div>
   )
 }

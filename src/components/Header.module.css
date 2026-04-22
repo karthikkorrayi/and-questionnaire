@@ -1,105 +1,71 @@
 .header {
-  background: var(--maroon);
-  padding: 18px 40px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 18px 32px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 100;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
 }
 
-.logoWrap {
+.logo {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   text-decoration: none;
 }
 
-.logoA {
-  font-family: var(--font-display);
-  font-size: 40px;
-  font-weight: 300;
-  color: var(--gold-light);
-  line-height: 1;
-  letter-spacing: -2px;
+/* The large A lettermark — like the uploaded logo */
+.logoIcon {
+  width: 40px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.logoIcon svg {
+  width: 100%;
+  height: 100%;
 }
 
 .logoText {
   display: flex;
   flex-direction: column;
+  gap: 1px;
 }
 
+/* "AnD" — the n is lowercase italic, A and D are uppercase */
 .logoAnd {
   font-family: var(--font-display);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--gold-light);
+  font-weight: 400;
+  font-size: 15px;
+  color: var(--brown);
+  letter-spacing: 3px;
+  line-height: 1.1;
+  text-transform: uppercase;
+}
+
+.logoAnd em {
+  font-style: italic;
+  font-size: 13px;
+  color: var(--brown-light);
+  text-transform: lowercase;
+  letter-spacing: 1px;
+}
+
+.logoSub {
+  font-family: var(--font-body);
+  font-weight: 300;
+  font-size: 8px;
   letter-spacing: 4px;
   text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1;
 }
 
-.logoStudio {
-  font-family: var(--font-body);
-  font-size: 9px;
-  font-weight: 300;
-  color: rgba(245, 239, 230, 0.55);
-  letter-spacing: 5px;
-  text-transform: uppercase;
-}
-
-.headerTitle {
-  font-family: var(--font-display);
-  font-size: 17px;
-  font-weight: 300;
-  color: rgba(245, 239, 230, 0.65);
-  letter-spacing: 2px;
-  font-style: italic;
-}
-
-.headerNav {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.navBtn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: rgba(245, 239, 230, 0.55);
-  padding: 7px 16px;
-  border: 1px solid rgba(245, 239, 230, 0.15);
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: var(--transition);
-}
-
-.navBtn:hover {
-  color: var(--gold-light);
-  border-color: rgba(181, 146, 76, 0.4);
-}
-
-.badge {
-  background: var(--gold);
-  color: var(--maroon);
-  font-size: 10px;
-  font-weight: 700;
-  padding: 1px 7px;
-  border-radius: 20px;
-  line-height: 1.5;
-}
-
-@media (max-width: 600px) {
-  .header {
-    padding: 14px 20px;
-  }
-  .headerTitle {
-    display: none;
-  }
+@media (max-width: 480px) {
+  .header { padding: 14px 20px; }
+  .logoIcon { width: 32px; height: 38px; }
+  .logoAnd { font-size: 13px; }
+  .logoSub { font-size: 7px; }
 }

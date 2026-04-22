@@ -1,6 +1,6 @@
 import styles from './FormControls.module.css'
 
-/* ─── CheckGroup ─────────────────────────────────────────────────────────── */
+/* ─── CheckGroup (multi-select chips) ─────────────────────────────────────── */
 export function CheckGroup({ name, options, value = [], onChange }) {
   const toggle = (opt) => {
     const next = value.includes(opt)
@@ -9,24 +9,23 @@ export function CheckGroup({ name, options, value = [], onChange }) {
     onChange(name, next)
   }
   return (
-    <div className={styles.checkGroup}>
+    <div className={styles.chipGroup}>
       {options.map((opt) => (
         <button
           key={opt}
           type="button"
-          className={`${styles.checkItem} ${value.includes(opt) ? styles.selected : ''}`}
+          className={`${styles.chip} ${value.includes(opt) ? styles.chipOn : ''}`}
           onClick={() => toggle(opt)}
           aria-pressed={value.includes(opt)}
         >
-          <span className={styles.checkBox} aria-hidden="true" />
-          <span className={styles.checkLabel}>{opt}</span>
+          {opt}
         </button>
       ))}
     </div>
   )
 }
 
-/* ─── RadioGroup ─────────────────────────────────────────────────────────── */
+/* ─── RadioGroup (single-select) ──────────────────────────────────────────── */
 export function RadioGroup({ name, options, value, onChange }) {
   return (
     <div className={styles.radioGroup} role="radiogroup">
@@ -34,36 +33,53 @@ export function RadioGroup({ name, options, value, onChange }) {
         <button
           key={opt}
           type="button"
-          className={`${styles.radioItem} ${value === opt ? styles.selected : ''}`}
+          className={`${styles.radioChip} ${value === opt ? styles.radioOn : ''}`}
           onClick={() => onChange(name, opt)}
           aria-checked={value === opt}
           role="radio"
         >
-          <span className={styles.radioDot} aria-hidden="true" />
-          <span className={styles.radioLabel}>{opt}</span>
+          <span className={styles.radioIndicator} aria-hidden="true" />
+          {opt}
         </button>
       ))}
     </div>
   )
 }
 
-/* ─── Field ──────────────────────────────────────────────────────────────── */
-export function Field({
-  label, name, type = 'text', placeholder,
-  value, onChange, textarea, required,
-}) {
+/* ─── YesNo ───────────────────────────────────────────────────────────────── */
+export function YesNo({ name, value, onChange, label }) {
+  return (
+    <div className={styles.yesnoWrap}>
+      <p className={styles.yesnoLabel}>{label}</p>
+      <div className={styles.yesnoGroup}>
+        <button
+          type="button"
+          className={`${styles.yesnoBtn} ${value === 'Yes' ? styles.yesOn : ''}`}
+          onClick={() => onChange(name, 'Yes')}
+        >Yes</button>
+        <button
+          type="button"
+          className={`${styles.yesnoBtn} ${value === 'No' ? styles.noOn : ''}`}
+          onClick={() => onChange(name, 'No')}
+        >No</button>
+      </div>
+    </div>
+  )
+}
+
+/* ─── Field ───────────────────────────────────────────────────────────────── */
+export function Field({ label, name, type = 'text', placeholder, value, onChange, textarea, required }) {
   return (
     <div className={styles.field}>
       {label && (
         <label htmlFor={name} className={styles.fieldLabel}>
           {label}
-          {required && <span className={styles.required} aria-hidden="true"> *</span>}
+          {required && <span className={styles.req} aria-hidden="true"> *</span>}
         </label>
       )}
       {textarea ? (
         <textarea
-          id={name}
-          name={name}
+          id={name} name={name}
           value={value || ''}
           placeholder={placeholder}
           onChange={(e) => onChange(name, e.target.value)}
@@ -72,9 +88,7 @@ export function Field({
         />
       ) : (
         <input
-          id={name}
-          type={type}
-          name={name}
+          id={name} type={type} name={name}
           value={value || ''}
           placeholder={placeholder}
           onChange={(e) => onChange(name, e.target.value)}
@@ -86,27 +100,32 @@ export function Field({
   )
 }
 
-/* ─── FieldRow ───────────────────────────────────────────────────────────── */
+/* ─── FieldRow ────────────────────────────────────────────────────────────── */
 export function FieldRow({ children }) {
   return <div className={styles.fieldRow}>{children}</div>
 }
 
-/* ─── Card ───────────────────────────────────────────────────────────────── */
+/* ─── Card ────────────────────────────────────────────────────────────────── */
 export function Card({ label, children }) {
   return (
     <div className={styles.card}>
-      {label && <span className={styles.cardLabel}>{label}</span>}
+      {label && (
+        <div className={styles.cardHeader}>
+          <span className={styles.cardDot} aria-hidden="true" />
+          <span className={styles.cardLabel}>{label}</span>
+        </div>
+      )}
       <div className={styles.cardBody}>{children}</div>
     </div>
   )
 }
 
-/* ─── SubLabel ───────────────────────────────────────────────────────────── */
+/* ─── SubLabel ────────────────────────────────────────────────────────────── */
 export function SubLabel({ children }) {
   return <p className={styles.subLabel}>{children}</p>
 }
 
-/* ─── Divider ────────────────────────────────────────────────────────────── */
+/* ─── Divider ─────────────────────────────────────────────────────────────── */
 export function Divider() {
   return <hr className={styles.divider} />
 }

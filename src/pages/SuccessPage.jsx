@@ -9,50 +9,41 @@ export default function SuccessPage() {
   return (
     <div className={styles.wrap}>
       <div className={styles.card}>
-        {/* Gold checkmark */}
         <div className={styles.iconWrap}>
-          <svg viewBox="0 0 48 48" fill="none" className={styles.icon}>
-            <circle cx="24" cy="24" r="23" stroke="#B5924C" strokeWidth="1.5" />
-            <path d="M14 24.5L20.5 31L34 17" stroke="#B5924C" strokeWidth="2"
-              strokeLinecap="round" strokeLinejoin="round" />
+          <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+            <circle cx="24" cy="24" r="22" stroke="var(--amber)" strokeWidth="1"/>
+            <path d="M15 24.5l6 6L33 17" stroke="var(--amber)" strokeWidth="1.5"
+              strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
 
         <p className={styles.eyebrow}>Questionnaire received</p>
+
         <h1 className={styles.title}>
-          Thank you,<br />
-          <em>{firstName}.</em>
+          Thank you,<br />{firstName}.
         </h1>
+
         <p className={styles.body}>
-          Your discovery brief has been submitted successfully. A branded PDF
-          has been downloaded to your device, and your responses have been
-          recorded in our system.
-        </p>
-        <p className={styles.body}>
-          The AnD Studio team will review your brief and reach out within
-          <strong> 1–2 business days</strong> to schedule your design consultation.
+          Your discovery brief has been submitted. A branded PDF has been
+          downloaded to your device, and your responses have been recorded.
         </p>
 
-        {/* Divider rule */}
+        <p className={styles.body}>
+          The AnD Studio team will review your brief and reach out within
+          <strong> 1–2 business days</strong>.
+        </p>
+
         <div className={styles.rule} />
 
         <p className={styles.contact}>
-          Questions in the meantime?{' '}
+          Questions? &nbsp;
           <a href="tel:+919398814073">+91 93988 14073</a>
         </p>
 
-        <div className={styles.actions}>
-          <Link to="/submissions" className={styles.btnGhost}>
-            View All Submissions
-          </Link>
-          <Link to="/" className={styles.btnPrimary}>
-            Submit Another →
-          </Link>
-        </div>
+        <Link to="/" className={styles.btnPrimary}>
+          Submit Another Response
+        </Link>
       </div>
-
-      {/* Background decoration */}
-      <div className={styles.bgDecor} aria-hidden="true" />
     </div>
   )
 }

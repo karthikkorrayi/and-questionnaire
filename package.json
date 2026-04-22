@@ -22,5 +22,8 @@
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }

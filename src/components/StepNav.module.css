@@ -1,96 +1,81 @@
-.progressWrap {
-  background: var(--maroon-mid);
-  padding: 10px 40px;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  border-bottom: 1px solid rgba(255,255,255,0.05);
+.wrap {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
 }
 
+/* thin amber line */
 .progressTrack {
-  flex: 1;
   height: 2px;
-  background: rgba(245, 239, 230, 0.15);
-  border-radius: 2px;
+  background: var(--border);
+  position: relative;
   overflow: hidden;
 }
-
 .progressFill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--gold), var(--gold-light));
-  border-radius: 2px;
-  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: absolute;
+  inset: 0 auto 0 0;
+  background: var(--amber);
+  transition: width 0.5s var(--ease-out);
+  opacity: 0.7;
 }
 
-.progressLabel {
-  font-size: 11px;
-  font-weight: 500;
-  color: var(--gold-light);
-  letter-spacing: 2px;
-  white-space: nowrap;
-  min-width: 40px;
-  text-align: right;
-}
-
-.stepsNav {
-  background: var(--maroon);
-  border-top: 1px solid rgba(245, 239, 230, 0.06);
-  border-bottom: 2px solid rgba(0,0,0,0.2);
-  padding: 0 40px;
+/* step row */
+.stepRow {
   display: flex;
-  gap: 0;
-  overflow-x: auto;
-  scrollbar-width: none;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 32px;
+  gap: 16px;
 }
 
-.stepsNav::-webkit-scrollbar {
-  display: none;
+.stepCounter {
+  font-size: 11px;
+  font-weight: 400;
+  color: var(--amber);
+  letter-spacing: 2px;
+  min-width: 32px;
+  flex-shrink: 0;
 }
+.stepOf { color: var(--muted); font-weight: 300; }
 
-.stepTab {
-  padding: 12px 18px;
-  font-size: 10.5px;
-  font-weight: 500;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: rgba(245, 239, 230, 0.35);
-  border-bottom: 2px solid transparent;
+/* dots */
+.dots {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(30,18,8,0.12);
+  border: none;
   cursor: pointer;
-  transition: var(--transition);
-  white-space: nowrap;
-  background: none;
-  border-top: none;
-  border-left: none;
-  border-right: none;
-  margin-bottom: -2px;
+  transition: all 0.25s var(--ease);
+  padding: 0;
+}
+.dot:hover { background: var(--amber-light); transform: scale(1.2); }
+.dotDone { background: var(--amber); opacity: 0.35; }
+.dotActive {
+  background: var(--amber);
+  width: 16px;
+  border-radius: 3px;
+  opacity: 1;
 }
 
-.stepTab:hover {
-  color: rgba(245, 239, 230, 0.65);
+/* step name */
+.stepName {
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--muted);
+  text-align: right;
+  min-width: 80px;
+  flex-shrink: 0;
 }
 
-.stepTab.active {
-  color: var(--gold-light);
-  border-bottom-color: var(--gold);
-}
-
-.stepTab.done {
-  color: rgba(181, 146, 76, 0.55);
-}
-
-.checkMark {
-  color: var(--gold);
-}
-
-@media (max-width: 600px) {
-  .progressWrap {
-    padding: 10px 20px;
-  }
-  .stepsNav {
-    padding: 0 16px;
-  }
-  .stepTab {
-    padding: 10px 12px;
-    font-size: 9.5px;
-  }
+@media (max-width: 480px) {
+  .stepRow { padding: 10px 20px; }
+  .stepName { display: none; }
 }
