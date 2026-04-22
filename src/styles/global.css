@@ -1,0 +1,126 @@
+/* ─── Brand Tokens ───────────────────────────────────────────────────────── */
+:root {
+  --maroon:        #3D1A1A;
+  --maroon-mid:    #5C2E2E;
+  --maroon-light:  #7A3F3F;
+  --cream:         #F5EFE6;
+  --cream-dark:    #EDE5D8;
+  --gold:          #B5924C;
+  --gold-light:    #D4AF72;
+  --text:          #1A0A0A;
+  --muted:         #8A7070;
+  --white:         #FDFAF6;
+  --border:        rgba(61, 26, 26, 0.15);
+
+  --font-display:  'Cormorant Garamond', Georgia, serif;
+  --font-body:     'Jost', sans-serif;
+
+  --radius:        2px;
+  --shadow-sm:     0 1px 4px rgba(61,26,26,0.08);
+  --shadow-md:     0 4px 24px rgba(61,26,26,0.12);
+  --shadow-lg:     0 8px 48px rgba(61,26,26,0.18);
+
+  --transition:    all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-body);
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+}
+
+a {
+  color: var(--gold);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--gold-light);
+}
+
+/* ─── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: var(--cream-dark); }
+::-webkit-scrollbar-thumb { background: var(--maroon-light); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--maroon); }
+
+/* ─── Selection ───────────────────────────────────────────────────────────── */
+::selection {
+  background: var(--gold);
+  color: var(--maroon);
+}
+
+/* ─── Focus ───────────────────────────────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+/* ─── Animations ──────────────────────────────────────────────────────────── */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInFast {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.animate-in {
+  animation: fadeIn 0.4s ease both;
+}
+
+/* ─── Utility ─────────────────────────────────────────────────────────────── */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

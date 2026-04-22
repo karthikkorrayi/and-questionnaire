@@ -1,0 +1,96 @@
+.progressWrap {
+  background: var(--maroon-mid);
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.progressTrack {
+  flex: 1;
+  height: 2px;
+  background: rgba(245, 239, 230, 0.15);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light));
+  border-radius: 2px;
+  transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progressLabel {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gold-light);
+  letter-spacing: 2px;
+  white-space: nowrap;
+  min-width: 40px;
+  text-align: right;
+}
+
+.stepsNav {
+  background: var(--maroon);
+  border-top: 1px solid rgba(245, 239, 230, 0.06);
+  border-bottom: 2px solid rgba(0,0,0,0.2);
+  padding: 0 40px;
+  display: flex;
+  gap: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.stepsNav::-webkit-scrollbar {
+  display: none;
+}
+
+.stepTab {
+  padding: 12px 18px;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: rgba(245, 239, 230, 0.35);
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+  background: none;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  margin-bottom: -2px;
+}
+
+.stepTab:hover {
+  color: rgba(245, 239, 230, 0.65);
+}
+
+.stepTab.active {
+  color: var(--gold-light);
+  border-bottom-color: var(--gold);
+}
+
+.stepTab.done {
+  color: rgba(181, 146, 76, 0.55);
+}
+
+.checkMark {
+  color: var(--gold);
+}
+
+@media (max-width: 600px) {
+  .progressWrap {
+    padding: 10px 20px;
+  }
+  .stepsNav {
+    padding: 0 16px;
+  }
+  .stepTab {
+    padding: 10px 12px;
+    font-size: 9.5px;
+  }
+}
