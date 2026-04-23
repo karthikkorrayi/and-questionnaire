@@ -1,48 +1,113 @@
 .wrap {
+  position: sticky;
+  top: 0;
+  z-index: 100;
   background: var(--white);
   border-bottom: 1px solid var(--border);
-  flex-shrink: 0;
+  box-shadow: var(--sh-sm);
 }
 
-/* thin amber line */
-.progressTrack {
-  height: 2px;
-  background: var(--border);
-  position: relative;
-  overflow: hidden;
-}
-.progressFill {
-  position: absolute;
-  inset: 0 auto 0 0;
-  background: var(--amber);
-  transition: width 0.5s var(--ease-out);
-  opacity: 0.7;
-}
-
-/* step row */
-.stepRow {
+/* ── Top bar ────────────────────────────────────────────────────────────── */
+.topBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 12px 32px;
-  gap: 16px;
+  padding: 0 20px;
+  height: var(--topbar-h);
+  gap: 12px;
 }
 
-.stepCounter {
-  font-size: 11px;
-  font-weight: 400;
-  color: var(--amber);
-  letter-spacing: 2px;
-  min-width: 32px;
+/* Back button */
+.backBtn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--brown-lt);
+  background: var(--bg);
+  border: 1px solid var(--border);
+  transition: var(--tr);
   flex-shrink: 0;
 }
-.stepOf { color: var(--muted); font-weight: 300; }
+.backBtn:hover {
+  background: var(--amber-pale);
+  border-color: var(--amber);
+  color: var(--amber);
+}
 
-/* dots */
-.dots {
+/* Center info */
+.centerInfo {
   display: flex;
-  gap: 6px;
   align-items: center;
+  gap: 7px;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+.stepIcon {
+  font-size: 14px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+.stepName {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--brown-mid);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Step count */
+.stepCount {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+  flex-shrink: 0;
+}
+.stepCurrent {
+  font-family: var(--font-h);
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--amber);
+  line-height: 1;
+}
+.stepSep {
+  font-size: 11px;
+  color: var(--border-md);
+  margin: 0 1px;
+}
+.stepTotal {
+  font-size: 12px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.5px;
+}
+
+/* ── Progress bar ───────────────────────────────────────────────────────── */
+.progressTrack {
+  height: 2px;
+  background: var(--border);
+  overflow: hidden;
+}
+.progressFill {
+  height: 100%;
+  background: var(--amber);
+  transition: width 0.5s var(--ease-o);
+  opacity: 0.65;
+}
+
+/* ── Dot row ────────────────────────────────────────────────────────────── */
+.dotsRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  padding: 8px 20px;
 }
 .dot {
   width: 5px;
@@ -51,31 +116,14 @@
   background: rgba(30,18,8,0.12);
   border: none;
   cursor: pointer;
-  transition: all 0.25s var(--ease);
   padding: 0;
+  transition: all 0.22s var(--ease);
 }
-.dot:hover { background: var(--amber-light); transform: scale(1.2); }
-.dotDone { background: var(--amber); opacity: 0.35; }
+.dot:hover { background: var(--amber-lt); transform: scale(1.3); }
+.dotDone   { background: var(--amber); opacity: 0.3; }
 .dotActive {
   background: var(--amber);
-  width: 16px;
+  width: 18px;
   border-radius: 3px;
   opacity: 1;
-}
-
-/* step name */
-.stepName {
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  color: var(--muted);
-  text-align: right;
-  min-width: 80px;
-  flex-shrink: 0;
-}
-
-@media (max-width: 480px) {
-  .stepRow { padding: 10px 20px; }
-  .stepName { display: none; }
 }

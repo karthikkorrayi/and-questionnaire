@@ -1,71 +1,60 @@
-/* ─── Google Fonts ───────────────────────────────────────────────────────────── */
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&family=Montserrat:wght@300;400;500&display=swap');
 
 :root {
-  --white:        #FFFFFF;
-  --off-white:    #FAF9F7;
-  --bg:           #F6F3EF;
-  --amber:        #B8641A;
-  --amber-light:  #D4854A;
-  --amber-pale:   #FBF0E8;
-  --brown:        #1E1208;
-  --brown-mid:    #3D2410;
-  --brown-light:  #6B4A30;
-  --muted:        #9A8070;
-  --border:       rgba(30, 18, 8, 0.08);
-  --border-focus: rgba(184, 100, 26, 0.4);
+  --white:       #FFFFFF;
+  --off-white:   #FAF9F7;
+  --bg:          #F5F2ED;
+  --amber:       #B8641A;
+  --amber-lt:    #D4854A;
+  --amber-pale:  #FBF0E8;
+  --brown:       #1E1208;
+  --brown-mid:   #3D2410;
+  --brown-lt:    #6B4A30;
+  --muted:       #9A8070;
+  --border:      rgba(30,18,8,0.10);
+  --border-md:   rgba(30,18,8,0.16);
 
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body:    'Montserrat', sans-serif;
+  --font-h:  'Playfair Display', Georgia, serif;
+  --font-b:  'Montserrat', sans-serif;
 
-  --ease:        cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out:    cubic-bezier(0, 0, 0.2, 1);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease:    cubic-bezier(0.4,0,0.2,1);
+  --ease-o:  cubic-bezier(0,0,0.2,1);
+  --spring:  cubic-bezier(0.34,1.56,0.64,1);
 
-  --shadow-sm: 0 1px 3px rgba(30, 18, 8, 0.05);
-  --shadow-md: 0 4px 16px rgba(30, 18, 8, 0.07);
-  --shadow-lg: 0 12px 40px rgba(30, 18, 8, 0.10);
+  --sh-sm: 0 1px 4px rgba(30,18,8,0.06);
+  --sh-md: 0 4px 20px rgba(30,18,8,0.09);
+  --sh-lg: 0 12px 40px rgba(30,18,8,0.12);
+  --r: 4px;
+  --tr: all 0.18s var(--ease);
 
-  --radius: 3px;
-  --transition: all 0.2s var(--ease);
+  /* Layout heights for sticky bars */
+  --topbar-h: 56px;
+  --bottombar-h: 72px;
 }
 
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html { -webkit-text-size-adjust: 100%; }
-
-body {
-  font-family: var(--font-body);
-  font-weight: 300;
-  background: var(--bg);
-  color: var(--brown);
-  min-height: 100vh;
-  line-height: 1.75;
-  -webkit-font-smoothing: antialiased;
-  letter-spacing: 0.015em;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--font-b);
+  font-weight:300;
+  background:var(--bg);
+  color:var(--brown);
+  min-height:100vh;
+  line-height:1.75;
+  -webkit-font-smoothing:antialiased;
+  letter-spacing:0.012em;
 }
+button{cursor:pointer;font-family:var(--font-b);font-weight:300;border:none;background:none}
+input,textarea,select{font-family:var(--font-b);font-weight:300}
+a{color:var(--amber);text-decoration:none}
+::-webkit-scrollbar{width:3px}
+::-webkit-scrollbar-thumb{background:rgba(30,18,8,0.12);border-radius:2px}
+::selection{background:var(--amber-pale);color:var(--amber)}
+:focus-visible{outline:1.5px solid var(--amber);outline-offset:3px}
 
-button { cursor: pointer; font-family: var(--font-body); font-weight: 300; border: none; background: none; }
-input, textarea, select { font-family: var(--font-body); font-weight: 300; }
-a { color: var(--amber); text-decoration: none; }
-a:hover { color: var(--amber-light); }
-
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(30,18,8,0.1); border-radius: 2px; }
-::selection { background: var(--amber-pale); color: var(--amber); }
-:focus-visible { outline: 1.5px solid var(--amber); outline-offset: 3px; }
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-@keyframes spin { to { transform: rotate(360deg); } }
-@keyframes popIn {
-  from { opacity: 0; transform: scale(0.88); }
-  to   { opacity: 1; transform: scale(1); }
-}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes slideR{from{opacity:0;transform:translateX(24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes slideL{from{opacity:0;transform:translateX(-24px)}to{opacity:1;transform:translateX(0)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes popIn{from{opacity:0;transform:scale(0.9)}to{opacity:1;transform:scale(1)}}

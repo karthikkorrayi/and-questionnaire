@@ -14,14 +14,14 @@ export const STEPS = [
 ]
 
 export const STEP_DESCRIPTIONS = [
-  'Tell us about the household that will call this home.',
-  'Property details and the full scope of work.',
-  'Budget range, flexibility and project timeline.',
+  'Who will be living in this home, and how do they live?',
+  'Tell us about the property and the scope of work.',
+  'Help us plan the right level of finishes and execution.',
   'The look, feel and personality of your ideal home.',
-  'Room-by-room needs and preferences.',
-  'Electrical, lighting, ceiling and smart home features.',
-  "What you're keeping, and what matters most day-to-day.",
-  'Final wall treatments, décor and atmosphere preferences.',
+  'Specific needs and preferences, room by room.',
+  'Lighting moods, ceilings and smart home features.',
+  "Existing pieces to keep, and priorities that matter most.",
+  'Wall treatments, décor personality and atmosphere.',
 ]
 
 // ─── Default empty form state ────────────────────────────────────────────────

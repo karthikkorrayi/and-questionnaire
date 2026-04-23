@@ -1,123 +1,102 @@
-/* ── Landing ──────────────────────────────────────────────────────────────── */
+/* ── Landing ──────────────────────────────────────────────────────────── */
 .landing {
-  min-height: calc(100vh - 73px);
+  min-height: 100vh;
+  background: var(--white);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 72px 32px;
+  padding: 60px 28px;
   position: relative;
   overflow: hidden;
-  background: var(--white);
 }
 
-.landingInner {
-  max-width: 560px;
+.inner {
+  max-width: 480px;
   width: 100%;
   position: relative;
   z-index: 1;
-}
-
-.landingEyebrow {
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 3.5px;
-  text-transform: uppercase;
-  color: var(--amber);
-  margin-bottom: 24px;
-  opacity: 0.8;
-  animation: fadeUp 0.5s var(--ease-out) 0.05s both;
-}
-
-.landingHeading {
-  font-family: var(--font-display);
-  font-size: clamp(36px, 6vw, 58px);
-  font-weight: 400;
-  color: var(--brown);
-  line-height: 1.1;
-  margin-bottom: 28px;
-  letter-spacing: -0.02em;
-  animation: fadeUp 0.5s var(--ease-out) 0.15s both;
-}
-
-.landingAccent {
-  color: var(--amber);
-  /* no italic — keep minimal/light as requested */
-}
-
-.landingBody {
-  font-size: 15px;
-  font-weight: 300;
-  color: var(--brown-light);
-  line-height: 1.85;
-  margin-bottom: 32px;
-  letter-spacing: 0.01em;
-  animation: fadeUp 0.5s var(--ease-out) 0.25s both;
-}
-
-.landingBody strong {
-  font-weight: 500;
-  color: var(--brown);
-}
-
-.landingNotice {
-  background: var(--amber-pale);
-  border-left: 2px solid var(--amber);
-  padding: 14px 18px;
-  border-radius: 0 var(--radius) var(--radius) 0;
-  margin-bottom: 36px;
-  animation: fadeUp 0.5s var(--ease-out) 0.35s both;
-}
-.landingNotice p {
-  font-size: 12px;
-  font-weight: 300;
-  color: var(--brown-light);
-  line-height: 1.7;
-  letter-spacing: 0.01em;
-}
-.landingNotice strong {
-  font-weight: 500;
-  color: var(--brown-mid);
-}
-
-.landingMeta {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  margin-bottom: 44px;
-  animation: fadeUp 0.5s var(--ease-out) 0.42s both;
-}
-
-.metaItem {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+}
+
+/* ── Logo block ───────────────────────────────────────────────────────── */
+.logoBlock {
+  display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 16px;
+  margin-bottom: 48px;
+  animation: fadeUp 0.5s var(--ease-o) 0.05s both;
 }
 
-.metaNum {
-  font-family: var(--font-display);
-  font-size: 28px;
-  font-weight: 400;
-  color: var(--amber);
-  line-height: 1;
-  letter-spacing: -0.02em;
+.logoWords {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
-.metaLabel {
-  font-size: 9px;
+.logoAnd {
+  font-family: var(--font-h);
+  font-size: 18px;
   font-weight: 400;
+  color: var(--brown);
   letter-spacing: 3px;
+  text-transform: uppercase;
+}
+.logoAnd em {
+  font-style: italic;
+  font-size: 15px;
+  color: var(--brown-lt);
+  letter-spacing: 1px;
+  text-transform: lowercase;
+}
+
+.logoPipe {
+  color: var(--border-md);
+  font-weight: 200;
+  font-size: 18px;
+  line-height: 1;
+}
+
+.logoStudio {
+  font-family: var(--font-b);
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 3.5px;
   text-transform: uppercase;
   color: var(--muted);
 }
 
-.metaDivider {
-  width: 1px;
-  height: 36px;
-  background: var(--border);
+/* ── Content ──────────────────────────────────────────────────────────── */
+.heading {
+  font-family: var(--font-h);
+  font-size: clamp(32px, 6vw, 52px);
+  font-weight: 400;
+  color: var(--brown);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+  animation: fadeUp 0.5s var(--ease-o) 0.15s both;
 }
 
-.landingCta {
+.headingAccent {
+  color: var(--amber);
+  display: block;
+}
+
+.body {
+  font-size: 15px;
+  font-weight: 300;
+  color: var(--brown-lt);
+  line-height: 1.85;
+  letter-spacing: 0.01em;
+  margin-bottom: 40px;
+  animation: fadeUp 0.5s var(--ease-o) 0.25s both;
+}
+.body strong { font-weight: 500; color: var(--brown-mid); }
+
+/* ── CTA ──────────────────────────────────────────────────────────────── */
+.cta {
   display: inline-flex;
   align-items: center;
   gap: 10px;
@@ -127,42 +106,42 @@
   font-weight: 500;
   letter-spacing: 2.5px;
   text-transform: uppercase;
-  padding: 16px 36px;
-  border-radius: var(--radius);
-  text-decoration: none;
-  transition: var(--transition);
-  animation: fadeUp 0.5s var(--ease-out) 0.5s both;
+  padding: 16px 32px;
+  border-radius: var(--r);
+  transition: var(--tr);
+  margin-bottom: 20px;
+  animation: fadeUp 0.5s var(--ease-o) 0.35s both;
 }
-.landingCta:hover {
+.cta:hover {
   background: var(--amber);
   color: var(--white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(184,100,26,0.2);
+  box-shadow: 0 8px 24px rgba(184,100,26,0.22);
 }
 
-/* Arch decoration */
-.landingDecor {
+/* ── Conf note ────────────────────────────────────────────────────────── */
+.conf {
+  font-size: 11px;
+  font-weight: 300;
+  color: var(--muted);
+  letter-spacing: 0.3px;
+  line-height: 1.6;
+  animation: fadeUp 0.5s var(--ease-o) 0.42s both;
+}
+
+/* ── Arch decoration ──────────────────────────────────────────────────── */
+.arch {
   position: absolute;
-  bottom: -40px;
-  right: -60px;
-  width: 500px;
-  height: 340px;
+  bottom: -60px;
+  right: -80px;
+  width: 55vw;
+  max-width: 420px;
   pointer-events: none;
   opacity: 1;
 }
-.landingDecor svg {
-  width: 100%;
-  height: 100%;
-}
-
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
 
 @media (max-width: 480px) {
-  .landing { padding: 48px 20px; align-items: flex-start; }
-  .landingHeading { font-size: 32px; }
-  .metaLabel { letter-spacing: 2px; }
-  .landingCta { width: 100%; justify-content: center; padding: 16px 24px; }
+  .landing { padding: 48px 24px; align-items: flex-start; }
+  .heading { font-size: 30px; }
+  .cta { width: 100%; justify-content: center; }
 }
