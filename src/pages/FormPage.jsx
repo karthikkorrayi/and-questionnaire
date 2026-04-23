@@ -2,7 +2,6 @@ import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import StepNav from '../components/StepNav'
 import { STEPS, STEP_DESCRIPTIONS, EMPTY_FORM } from '../lib/schema'
-import { downloadPDF } from '../lib/pdfGenerator'
 import { Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7 } from './FormSteps'
 import styles from './FormPage.module.css'
 
@@ -23,76 +22,78 @@ export default function FormPage({ onSubmitSuccess }) {
     setDir(i > step ? 'fwd' : 'bck')
     setStep(i)
     if (scrollRef.current) scrollRef.current.scrollTop = 0
+    window.scrollTo({ top: 0, behavior: 'instant' })
   }
 
   const next = () => { if (step < STEPS.length - 1) goTo(step + 1) }
 
-  const handleSubmit = async () => {
-    setSub(true); setError(null)
-    try {
-      try {
-        const res = await fetch('/api/submit', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ form }),
-        })
-        const data = await res.json().catch(() => ({}))
-        if (!res.ok) throw new Error(data.error || `Server error ${res.status}`)
-      } catch (apiErr) {
-        // 404 = running `npm run dev` without Vercel — expected locally
-        if (!apiErr.message.includes('404')) throw apiErr
-        console.warn('Local dev: run `vercel dev` to test the API.')
-      }
-      await downloadPDF(form)
-      onSubmitSuccess(form)
-      navigate('/success', { state: { name: form.fullName } })
-    } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.')
-    } finally {
-      setSub(false)
+ const handleSubmit = async () => {
+  setSub(true); setError(null)
+  try {
+    const res  = await fetch('/api/submit', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ form }),
+    })
+
+    const data = await res.json().catch(() => ({}))
+
+    if (!res.ok) {
+      // Show the actual server error — helps during debugging
+      throw new Error(data.error || `Server error ${res.status}`)
     }
+
+    onSubmitSuccess(form)
+    navigate('/success', { replace: true, state: { name: form.fullName } })
+
+  } catch (err) {
+    // Only skip if truly local dev with no API at all
+    if (err.message?.includes('Failed to fetch') && import.meta.env.DEV) {
+      console.warn('Local dev — no API. Navigating anyway.')
+      onSubmitSuccess(form)
+      navigate('/success', { replace: true, state: { name: form.fullName } })
+      return
+    }
+    setError(err.message || 'Something went wrong. Please try again.')
+  } finally {
+    setSub(false)
   }
+}
 
   const isLast = step === STEPS.length - 1
   const StepComponent = STEP_COMPONENTS[step]
   const animClass = dir === 'fwd' ? styles.animFwd : styles.animBck
 
-  // Next button label changes per step
   const nextLabels = [
-    'Personal Info →',
-    'Project Details →',
-    'Budget & Timeline →',
-    'Design Preferences →',
-    'Space Requirements →',
-    'Electrical & Lighting →',
-    'Assets & Priorities →',
-    'Review & Submit',
-  ]
+  'Project Details',
+  'Budget & Timeline',
+  'Design Preferences',
+  'Space Requirements',
+  'Electrical & Lighting',
+  'Assets & Priorities',
+  'Final Details',
+  'Review & Submit',
+]
 
   return (
     <div className={styles.shell}>
-      {/* Sticky top nav */}
       <StepNav
         currentStep={step}
         onStepClick={goTo}
         totalSteps={STEPS.length}
       />
 
-      {/* Scrollable content */}
       <div className={styles.scrollArea} ref={scrollRef}>
         <div className={styles.contentWrap}>
 
-          {/* Step heading — clean, no duplicate section name */}
           <div className={styles.stepHead}>
             <p className={styles.stepDesc}>{STEP_DESCRIPTIONS[step]}</p>
           </div>
 
-          {/* Animated step */}
           <div key={step} className={`${styles.stepContent} ${animClass}`}>
             <StepComponent form={form} set={set} />
           </div>
 
-          {/* Error */}
           {error && (
             <div className={styles.errorBox} role="alert">
               <span className={styles.errIcon}>!</span>
@@ -100,12 +101,10 @@ export default function FormPage({ onSubmitSuccess }) {
             </div>
           )}
 
-          {/* Bottom spacer so content clears the fixed footer */}
           <div style={{ height: 'calc(var(--bottombar-h) + 16px)' }} />
         </div>
       </div>
 
-      {/* Sticky bottom bar */}
       <div className={styles.bottomBar}>
         <div className={styles.bottomInner}>
           {isLast ? (

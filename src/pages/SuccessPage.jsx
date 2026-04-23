@@ -1,46 +1,68 @@
-import { useLocation, Link } from 'react-router-dom'
+import { useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styles from './SuccessPage.module.css'
 
 export default function SuccessPage() {
   const { state } = useLocation()
+  const navigate  = useNavigate()
   const firstName = (state?.name || 'there').split(' ')[0]
+
+  // ── Fix #4: intercept browser/device back button ──
+  useEffect(() => {
+    // Push a dummy entry so the first "back" hits it
+    window.history.pushState(null, '', window.location.href)
+
+    const onPop = () => {
+      // Always send to home, never back to form
+      navigate('/', { replace: true })
+    }
+
+    window.addEventListener('popstate', onPop)
+    return () => window.removeEventListener('popstate', onPop)
+  }, [navigate])
 
   return (
     <div className={styles.page}>
-      {/* Minimal top bar */}
-      <div className={styles.topBar}>
-        <Link to="/" className={styles.homeLink}>
-          <svg width="16" height="16" viewBox="0 0 18 18" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M11 4L6 9l5 5"/>
-          </svg>
-          Back to home
-        </Link>
-      </div>
 
       <div className={styles.content}>
+        {/* Check ring */}
         <div className={styles.ring}>
-          <svg width="44" height="44" viewBox="0 0 44 44" fill="none">
-            <circle cx="22" cy="22" r="20" stroke="var(--amber)" strokeWidth="1"/>
-            <path d="M13 22.5l6 6L31 15" stroke="var(--amber)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+          <svg width="52" height="52" viewBox="0 0 52 52" fill="none">
+            <circle cx="26" cy="26" r="24" stroke="var(--amber)" strokeWidth="1.2"/>
+            <path d="M16 26.5l7 7L36 18" stroke="var(--amber)" strokeWidth="1.6"
+              strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
         </div>
 
-        <p className={styles.eyebrow}>Questionnaire received</p>
+        {/* ── Fix #2: Updated copy ── */}
+        <p className={styles.eyebrow}>Brief received</p>
         <h1 className={styles.title}>Thank you,<br />{firstName}.</h1>
 
         <p className={styles.body}>
-          Your discovery brief has been submitted and a branded PDF
-          has been downloaded to your device.
+          We've received your discovery brief and our team will
+          carefully go through every detail you've shared.
         </p>
+
         <p className={styles.body}>
-          The AnD Studio team will review your brief and reach out
-          within <strong>1–2 business days</strong>.
+          Expect a call or message from us within{' '}
+          <strong>1–2 business days</strong> to discuss your vision
+          and next steps.
         </p>
 
         <div className={styles.divider} />
-        <p className={styles.phone}>+91 93988 14073</p>
 
-        <Link to="/" className={styles.btn}>Submit Another Response</Link>
+        <p className={styles.contactLabel}>Have questions? Reach us directly</p>
+        <a href="tel:+919398814073" className={styles.phone}>
+          +91 93988 14073
+        </a>
+
+        {/* Back to home — navigates with replace so stack stays clean */}
+        <button
+          className={styles.btn}
+          onClick={() => navigate('/', { replace: true })}
+        >
+          Back to Home
+        </button>
       </div>
     </div>
   )

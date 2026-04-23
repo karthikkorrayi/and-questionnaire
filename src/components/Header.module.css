@@ -34,6 +34,18 @@
   gap: 1px;
 }
 
+.logoLink {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logoImg {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+}
+
 /* "AnD" — the n is lowercase italic, A and D are uppercase */
 .logoAnd {
   font-family: var(--font-display);

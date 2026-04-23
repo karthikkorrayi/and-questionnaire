@@ -1,99 +1,99 @@
 .page {
-  min-height: 100vh;
-  background: var(--white);
+  min-height: 100dvh;
   display: flex;
-  flex-direction: column;
-}
-.topBar {
-  padding: 16px 24px;
-  border-bottom: 1px solid var(--border);
-}
-.homeLink {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: 1.5px;
-  text-transform: uppercase;
-  color: var(--muted);
-  transition: var(--tr);
-}
-.homeLink:hover { color: var(--amber); }
-
-.content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  text-align: center;
-  padding: 60px 28px;
-  max-width: 440px;
-  margin: 0 auto;
+  background: var(--cream);
+  padding: 40px 24px;
+}
+
+.content {
+  max-width: 420px;
   width: 100%;
-  animation: popIn 0.45s var(--spring) both;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0;
 }
 
 .ring {
-  margin-bottom: 28px;
+  margin-bottom: 24px;
 }
 
 .eyebrow {
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 3.5px;
+  font-size: 11px;
+  letter-spacing: 2.5px;
   text-transform: uppercase;
   color: var(--amber);
-  margin-bottom: 14px;
-  opacity: 0.8;
+  margin: 0 0 12px;
+  font-weight: 400;
 }
 
 .title {
-  font-family: var(--font-h);
-  font-size: 36px;
-  font-weight: 400;
-  color: var(--brown);
-  line-height: 1.2;
-  letter-spacing: -0.01em;
-  margin-bottom: 24px;
+  font-size: clamp(28px, 6vw, 38px);
+  font-weight: 300;
+  color: var(--brown-dark);
+  line-height: 1.25;
+  margin: 0 0 24px;
+  letter-spacing: -0.5px;
 }
 
 .body {
   font-size: 14px;
+  color: var(--brown-light);
+  line-height: 1.75;
+  margin: 0 0 12px;
   font-weight: 300;
-  color: var(--muted);
-  line-height: 1.8;
-  margin-bottom: 12px;
-  letter-spacing: 0.01em;
 }
-.body strong { color: var(--brown-mid); font-weight: 400; }
 
 .divider {
   width: 40px;
   height: 1px;
-  background: var(--border-md);
-  margin: 24px auto;
+  background: var(--amber);
+  opacity: 0.35;
+  margin: 20px auto;
 }
 
-.phone {
-  font-size: 12px;
+/* NEW */
+.contactLabel {
+  font-size: 11px;
+  color: var(--brown-light);
+  letter-spacing: 0.5px;
+  margin: 0 0 6px;
   font-weight: 300;
-  color: var(--muted);
+}
+
+/* Updated — now an <a> tag */
+.phone {
+  display: block;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--brown-dark);
   letter-spacing: 1px;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  text-decoration: none;
+}
+.phone:hover {
+  color: var(--amber);
 }
 
 .btn {
-  display: inline-block;
-  font-size: 10px;
-  font-weight: 500;
-  letter-spacing: 2.5px;
-  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 13px 28px;
-  border-radius: var(--r);
-  background: var(--brown);
-  color: var(--white);
-  transition: var(--tr);
+  background: var(--brown-dark);
+  color: var(--cream);
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  font-weight: 400;
+  border-radius: 2px;
+  transition: background 0.2s;
 }
-.btn:hover { background: var(--amber); color: var(--white); }
+.btn:hover {
+  background: var(--amber);
+}

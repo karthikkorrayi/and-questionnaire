@@ -23,10 +23,24 @@
 /* ── Logo block ───────────────────────────────────────────────────────── */
 .logoBlock {
   display: flex;
-  align-items: center;
-  gap: 16px;
-  margin-bottom: 48px;
-  animation: fadeUp 0.5s var(--ease-o) 0.05s both;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin-bottom: 44px;
+}
+
+.logoImg {
+  height: 88px;          /* adjust to taste — matches screenshot 2 proportions */
+  width: auto;
+  object-fit: contain;
+  object-position: left center;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+@media (max-width: 480px) {
+  .logoImg {
+    height: 72px;
+  }
 }
 
 .logoWords {

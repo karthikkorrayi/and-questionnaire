@@ -1,35 +1,53 @@
-// api/submit.js
-// Fix: error:1E08010C:DECODER routines::unsupported
-// Cause: GOOGLE_PRIVATE_KEY uses "BEGIN RSA PRIVATE KEY" (PKCS#1)
-// but Node 18+ / OpenSSL 3 requires "BEGIN PRIVATE KEY" (PKCS#8)
-
 import { google } from 'googleapis'
 
+/* ── Auth ──────────────────────────────────────────────────────────────── */
 function getAuth() {
   const email  = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL
   const rawKey = process.env.GOOGLE_PRIVATE_KEY
 
-  if (!email || !rawKey) {
-    throw new Error('Missing GOOGLE_SERVICE_ACCOUNT_EMAIL or GOOGLE_PRIVATE_KEY env vars')
-  }
+  if (!email)  throw new Error('Missing GOOGLE_SERVICE_ACCOUNT_EMAIL')
+  if (!rawKey) throw new Error('Missing GOOGLE_PRIVATE_KEY')
 
-  // Step 1: Unescape \n stored literally by Vercel env vars
-  let privateKey = rawKey.replace(/\\n/g, '\n').trim()
+  // 1. Replace literal \n with real newlines (Vercel stores them escaped)
+  let key = rawKey.replace(/\\n/g, '\n')
 
-  // Step 2: Fix PKCS#1 → PKCS#8 header (the root cause of DECODER error)
-  privateKey = privateKey
+  // 2. Unwrap any surrounding quotes Vercel sometimes adds
+  key = key.replace(/^["']|["']$/g, '').trim()
+
+  // 3. Ensure correct PKCS#8 headers (Node 18+ / OpenSSL 3 requirement)
+  key = key
     .replace(/-----BEGIN RSA PRIVATE KEY-----/g, '-----BEGIN PRIVATE KEY-----')
     .replace(/-----END RSA PRIVATE KEY-----/g,   '-----END PRIVATE KEY-----')
 
-  // Step 3: Trim whitespace from each line (copy-paste artifacts)
-  privateKey = privateKey.split('\n').map(l => l.trim()).filter(Boolean).join('\n')
+  // 4. Reconstruct clean PEM — strip all whitespace then re-chunk at 64 chars
+  const headerMatch = key.match(/(-----BEGIN [^-]+-----)/)
+  const footerMatch = key.match(/(-----END [^-]+-----)/)
+
+  if (!headerMatch || !footerMatch) {
+    throw new Error(`Private key PEM headers not found. Key starts with: ${key.slice(0, 60)}`)
+  }
+
+  const header = headerMatch[1]
+  const footer = footerMatch[1]
+  const body   = key
+    .replace(header, '')
+    .replace(footer, '')
+    .replace(/\s+/g, '')   // strip ALL whitespace from body
+
+  // Re-chunk body into 64-char lines
+  const chunked = body.match(/.{1,64}/g)?.join('\n') ?? body
+  const cleanKey = `${header}\n${chunked}\n${footer}`
 
   return new google.auth.GoogleAuth({
-    credentials: { client_email: email, private_key: privateKey },
+    credentials: {
+      client_email: email,
+      private_key:  cleanKey,
+    },
     scopes: ['https://www.googleapis.com/auth/spreadsheets'],
   })
 }
 
+/* ── Headers ───────────────────────────────────────────────────────────── */
 const HEADERS = [
   'Timestamp','Full Name','Phone','Email','City','Address',
   'Household','Adults','Children Ages','Occupations','WFH',
@@ -51,9 +69,10 @@ const HEADERS = [
   'Decor Level','Decor Elements','Home Feel','Dream Words','Wish Detail','Not Repeat',
 ]
 
+/* ── Row builder ───────────────────────────────────────────────────────── */
 function toRow(f) {
   const a = v => Array.isArray(v) ? v.join(', ') : (v || '')
-  const s = v => v || ''
+  const s = v => String(v || '')
   return [
     new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' }),
     s(f.fullName), s(f.phone), s(f.email), s(f.city), s(f.address),
@@ -71,39 +90,57 @@ function toRow(f) {
     a(f.acType), a(f.electricalAppliances),
     a(f.falseCeiling), a(f.falseCeilingMaterial), a(f.falseCeilingDesign),
     s(f.lightingMood), a(f.fixturePreference), s(f.dimmer),
-    s(f.smartLighting), s(f.smartCurtains), s(f.smartDoorLock), s(f.smartAC), s(f.homeHub), s(f.brandPref),
+    s(f.smartLighting), s(f.smartCurtains), s(f.smartDoorLock),
+    s(f.smartAC), s(f.homeHub), s(f.brandPref),
     s(f.existingFurniture), s(f.furnitureList), s(f.heirlooms),
     s(f.easyMaintenance), s(f.storageFirst), s(f.vastu), s(f.ecoFriendly), s(f.elderlyFriendly),
     a(f.wallFinish), a(f.accentWalls), a(f.windowCovering), a(f.softFurnishing),
-    s(f.decorLevel), a(f.decorElements), a(f.homeFeel), s(f.dreamWords), s(f.wishDetail), s(f.notRepeat),
+    s(f.decorLevel), a(f.decorElements), a(f.homeFeel),
+    s(f.dreamWords), s(f.wishDetail), s(f.notRepeat),
   ]
 }
 
+/* ── Handler ───────────────────────────────────────────────────────────── */
 export default async function handler(req, res) {
+  // CORS
   res.setHeader('Access-Control-Allow-Origin', '*')
   res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type')
   if (req.method === 'OPTIONS') return res.status(200).end()
-  if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
+  if (req.method !== 'POST')   return res.status(405).json({ error: 'Method not allowed' })
 
   try {
-    const { form } = req.body
+    const { form } = req.body ?? {}
     if (!form) return res.status(400).json({ error: 'Missing form data' })
 
     const sheetId = process.env.GOOGLE_SHEET_ID
     if (!sheetId) return res.status(500).json({ error: 'GOOGLE_SHEET_ID not set' })
 
-    const auth   = getAuth()
+    // Build auth — log key shape for debugging without exposing secret
+    let auth
+    try {
+      auth = getAuth()
+    } catch (authErr) {
+      console.error('[auth]', authErr.message)
+      return res.status(500).json({ error: `Auth failed: ${authErr.message}` })
+    }
+
     const sheets = google.sheets({ version: 'v4', auth })
 
-    // Auto-create headers on first ever submission
-    let hasData = false
+    // Check if headers row exists
+    let hasHeaders = false
     try {
-      const check = await sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range: 'Sheet1!A1' })
-      hasData = (check.data.values || []).length > 0
-    } catch (_) {}
+      const check = await sheets.spreadsheets.values.get({
+        spreadsheetId: sheetId,
+        range: 'Sheet1!A1',
+      })
+      hasHeaders = (check.data.values?.[0]?.length ?? 0) > 0
+    } catch (checkErr) {
+      console.warn('[header check]', checkErr.message)
+    }
 
-    if (!hasData) {
+    // Write headers if missing
+    if (!hasHeaders) {
       await sheets.spreadsheets.values.update({
         spreadsheetId: sheetId,
         range: 'Sheet1!A1',
@@ -112,17 +149,25 @@ export default async function handler(req, res) {
       })
     }
 
+    // Append data row
+    const row = toRow(form)
     await sheets.spreadsheets.values.append({
       spreadsheetId: sheetId,
-      range: 'Sheet1',
+      range: 'Sheet1!A1',
       valueInputOption: 'RAW',
       insertDataOption: 'INSERT_ROWS',
-      requestBody: { values: [toRow(form)] },
+      requestBody: { values: [row] },
     })
 
-    return res.status(200).json({ success: true })
+    console.log(`[submit] ✓ ${form.fullName} — ${row.length} columns`)
+    return res.status(200).json({ success: true, columns: row.length })
+
   } catch (err) {
     console.error('[/api/submit]', err.message)
-    return res.status(500).json({ error: err.message })
+    // Return full error in response for easier debugging
+    return res.status(500).json({
+      error: err.message,
+      hint: 'Check Vercel function logs for full stack trace',
+    })
   }
 }
