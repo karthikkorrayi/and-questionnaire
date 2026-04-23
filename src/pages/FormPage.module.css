@@ -115,28 +115,34 @@
   height: var(--bottombar-h);
 }
 
+/* ── Bottom bar ─────────────────────────────────────────────────────────── */
 .bottomBar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  height: var(--bottombar-h);
-  background: var(--cream);
-  border-top: 1px solid rgba(61, 26, 26, 0.08);
+  z-index: 10;
+
+  /* Match the header glass style */
+  background: rgba(245, 239, 230, 0.88);
+  backdrop-filter: blur(16px) saturate(1.4);
+  -webkit-backdrop-filter: blur(16px) saturate(1.4);
+  border-top: 1px solid rgba(184, 100, 26, 0.12);
+  box-shadow: 0 -4px 20px rgba(61, 26, 26, 0.06);
+
   display: flex;
   align-items: center;
-  justify-content: center;     /* ← centers the inner on desktop */
-  z-index: 10;
-  backdrop-filter: blur(8px);
+  justify-content: center;
+  height: var(--bottombar-h, 72px);
 }
 
 .bottomInner {
   width: 100%;
-  max-width: 720px;            /* ← matches contentWrap */
-  padding: 0 24px;
+  max-width: 720px;
+  padding: 0 20px;
   box-sizing: border-box;
   display: flex;
-  justify-content: flex-end;   /* button sits right within the centered column */
+  justify-content: flex-end;
 }
 
 @media (min-width: 1024px) {
@@ -145,37 +151,14 @@
   }
 }
 
-/* ── Next button ────────────────────────────────────────────────────────── */
-.btnNext {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  background: var(--brown-dark);
-  color: var(--cream);
-  border: none;
-  cursor: pointer;
-  font-size: 11px;
-  letter-spacing: 2px;
-  text-transform: uppercase;
-  font-weight: 500;
-  border-radius: 2px;
-  transition: background 0.2s, transform 0.15s;
-  font-family: inherit;
-}
-
-.btnNext:hover {
-  background: var(--amber);
-  transform: translateX(2px);
-}
-
-/* ── Submit button ──────────────────────────────────────────────────────── */
+/* ── Buttons — keep dark brown, NOT amber ───────────────────────────────── */
+.btnNext,
 .btnSubmit {
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 14px 28px;
-  background: var(--brown-dark);
+  padding: 13px 24px;
+  background: var(--brown-dark);      /* dark maroon — always */
   color: var(--cream);
   border: none;
   cursor: pointer;
@@ -184,16 +167,22 @@
   text-transform: uppercase;
   font-weight: 500;
   border-radius: 2px;
-  transition: background 0.2s;
+  transition: background 0.2s, gap 0.15s;
   font-family: inherit;
+  white-space: nowrap;
+}
+
+.btnNext:hover {
+  background: #5C2A2A;               /* slightly lighter maroon on hover */
+  gap: 14px;
 }
 
 .btnSubmit:hover:not(:disabled) {
-  background: var(--amber);
+  background: #5C2A2A;
 }
 
 .btnSubmit:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 

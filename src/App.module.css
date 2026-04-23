@@ -20,26 +20,34 @@
   align-items: flex-start;
 }
 
-/* ── Logo block ───────────────────────────────────────────────────────── */
+/* ── Logo block ─────────────────────────────────────────────────────────── */
 .logoBlock {
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
   margin-bottom: 44px;
 }
 
 .logoImg {
-  height: 88px;          /* adjust to taste — matches screenshot 2 proportions */
+  height: 120px;                  /* bigger — was 88px */
   width: auto;
   object-fit: contain;
   object-position: left center;
   user-select: none;
   -webkit-user-drag: none;
+
+  /* ── Removes white background if PNG has white bg ──
+     mix-blend-mode: multiply makes white transparent
+     on light/cream backgrounds — works perfectly here  */
+  mix-blend-mode: multiply;
 }
 
 @media (max-width: 480px) {
   .logoImg {
-    height: 72px;
+    height: 100px;                /* still bigger than before on mobile */
+  }
+}
+
+@media (min-width: 768px) {
+  .logoImg {
+    height: 140px;                /* even larger on tablet/desktop */
   }
 }
 
