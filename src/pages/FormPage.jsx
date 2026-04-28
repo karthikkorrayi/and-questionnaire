@@ -1,5 +1,5 @@
-import { useState, useRef } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useState, useRef, useEffect } from 'react'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import StepNav from '../components/StepNav'
 import { STEPS, STEP_DESCRIPTIONS, EMPTY_FORM } from '../lib/schema'
 import { Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7 } from './FormSteps'
@@ -8,72 +8,87 @@ import styles from './FormPage.module.css'
 const STEP_COMPONENTS = [Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7]
 
 export default function FormPage({ onSubmitSuccess }) {
-  const navigate    = useNavigate()
-  const scrollRef   = useRef(null)
-  const [step, setStep]         = useState(0)
-  const [dir,  setDir]          = useState('fwd')
-  const [form, setForm]         = useState(EMPTY_FORM)
-  const [submitting, setSub]    = useState(false)
-  const [error, setError]       = useState(null)
+  const navigate                    = useNavigate()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const scrollRef                   = useRef(null)
+
+  // ── Step driven by URL param — browser back/fwd works naturally ──────
+  const step = Math.min(
+    Math.max(parseInt(searchParams.get('step') || '0', 10), 0),
+    STEPS.length - 1
+  )
+
+  // ── Detect direction for animation ───────────────────────────────────
+  const prevStepRef = useRef(step)
+  const [dir, setDir] = useState('fwd')
+
+  useEffect(() => {
+    setDir(step > prevStepRef.current ? 'fwd' : 'bck')
+    prevStepRef.current = step
+    // Scroll to top on every step change (including browser back)
+    window.scrollTo({ top: 0, behavior: 'instant' })
+    if (scrollRef.current) scrollRef.current.scrollTop = 0
+  }, [step])
+
+  const [form, setForm]          = useState(EMPTY_FORM)
+  const [submitting, setSub]     = useState(false)
+  const [error, setError]        = useState(null)
 
   const set = (name, val) => setForm(f => ({ ...f, [name]: val }))
 
+  // ── Navigation — push to history so browser back goes to prev step ───
   const goTo = (i) => {
-    setDir(i > step ? 'fwd' : 'bck')
-    setStep(i)
-    if (scrollRef.current) scrollRef.current.scrollTop = 0
-    window.scrollTo({ top: 0, behavior: 'instant' })
+    setSearchParams({ step: i }, { replace: false })
   }
 
-  const next = () => { if (step < STEPS.length - 1) goTo(step + 1) }
+  const next = () => {
+    if (step < STEPS.length - 1) goTo(step + 1)
+  }
 
- const handleSubmit = async () => {
-  setSub(true); setError(null)
-  try {
-    const res  = await fetch('/api/submit', {
-      method:  'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body:    JSON.stringify({ form }),
-    })
+  // ── Submit ────────────────────────────────────────────────────────────
+  const handleSubmit = async () => {
+    setSub(true); setError(null)
+    try {
+      const res  = await fetch('/api/submit', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ form }),
+      })
+      const data = await res.json().catch(() => ({}))
+      if (!res.ok) throw new Error(data.error || `Server error ${res.status}`)
 
-    const data = await res.json().catch(() => ({}))
-
-    if (!res.ok) {
-      // Show the actual server error — helps during debugging
-      throw new Error(data.error || `Server error ${res.status}`)
-    }
-
-    onSubmitSuccess(form)
-    navigate('/success', { replace: true, state: { name: form.fullName } })
-
-  } catch (err) {
-    // Only skip if truly local dev with no API at all
-    if (err.message?.includes('Failed to fetch') && import.meta.env.DEV) {
-      console.warn('Local dev — no API. Navigating anyway.')
       onSubmitSuccess(form)
+      // replace: true wipes out the whole /questionnaire?step=N history
+      // so browser back from success → home, not back into the form
       navigate('/success', { replace: true, state: { name: form.fullName } })
-      return
-    }
-    setError(err.message || 'Something went wrong. Please try again.')
-  } finally {
-    setSub(false)
-  }
-}
 
-  const isLast = step === STEPS.length - 1
+    } catch (err) {
+      if (err.message?.includes('Failed to fetch') && import.meta.env.DEV) {
+        console.warn('Local dev — no API.')
+        onSubmitSuccess(form)
+        navigate('/success', { replace: true, state: { name: form.fullName } })
+        return
+      }
+      setError(err.message || 'Something went wrong. Please try again.')
+    } finally {
+      setSub(false)
+    }
+  }
+
+  const isLast        = step === STEPS.length - 1
   const StepComponent = STEP_COMPONENTS[step]
-  const animClass = dir === 'fwd' ? styles.animFwd : styles.animBck
+  const animClass     = dir === 'fwd' ? styles.animFwd : styles.animBck
 
   const nextLabels = [
-  'Project Details',
-  'Budget & Timeline',
-  'Design Preferences',
-  'Space Requirements',
-  'Electrical & Lighting',
-  'Assets & Priorities',
-  'Final Details',
-  'Review & Submit',
-]
+    'Project Details',
+    'Budget & Timeline',
+    'Design Preferences',
+    'Space Requirements',
+    'Electrical & Lighting',
+    'Assets & Priorities',
+    'Final Details',
+    'Review & Submit',
+  ]
 
   return (
     <div className={styles.shell}>
@@ -101,10 +116,11 @@ export default function FormPage({ onSubmitSuccess }) {
             </div>
           )}
 
-          <div style={{ height: 'calc(var(--bottombar-h) + 16px)' }} />
+          <div style={{ height: 'calc(var(--bottombar-h, 72px) + 16px)' }} />
         </div>
       </div>
 
+      {/* Bottom bar */}
       <div className={styles.bottomBar}>
         <div className={styles.bottomInner}>
           {isLast ? (
@@ -115,15 +131,19 @@ export default function FormPage({ onSubmitSuccess }) {
             >
               {submitting ? (
                 <>
-                  <svg className={styles.spinner} width="14" height="14" viewBox="0 0 14 14" fill="none">
-                    <circle cx="7" cy="7" r="5" stroke="currentColor" strokeWidth="1.5" strokeDasharray="20" strokeDashoffset="10"/>
+                  <svg className={styles.spinner} width="14" height="14"
+                    viewBox="0 0 14 14" fill="none">
+                    <circle cx="7" cy="7" r="5" stroke="currentColor"
+                      strokeWidth="1.5" strokeDasharray="20" strokeDashoffset="10"/>
                   </svg>
                   Submitting…
                 </>
               ) : (
                 <>
                   Submit Questionnaire
-                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
+                    stroke="currentColor" strokeWidth="1.5"
+                    strokeLinecap="round" strokeLinejoin="round">
                     <path d="M3 8h10M9 4l4 4-4 4"/>
                   </svg>
                 </>
@@ -132,7 +152,9 @@ export default function FormPage({ onSubmitSuccess }) {
           ) : (
             <button className={styles.btnNext} onClick={next}>
               {nextLabels[step]}
-              <svg width="13" height="13" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="13" height="13" viewBox="0 0 16 16" fill="none"
+                stroke="currentColor" strokeWidth="1.5"
+                strokeLinecap="round" strokeLinejoin="round">
                 <path d="M3 8h10M9 4l4 4-4 4"/>
               </svg>
             </button>
